@@ -3,20 +3,7 @@
 	import { ChevronDown } from 'lucide-svelte';
 	import { fly } from 'svelte/transition';
 
-	interface ReleaseAssets {
-		windows: {
-			installer: { x64: string; arm64: string };
-			portable: { x64: string; arm64: string };
-		};
-		linux: {
-			appimage: string;
-			deb: string;
-			rpm: string;
-		};
-		mac: {
-			universal: string;
-		};
-	}
+	import type { ReleaseAssets } from '$lib/releases';
 
 	interface LatestRelease {
 		version: string;
@@ -88,7 +75,7 @@
 	{:else}
 		<!-- Primary Button -->
 		<a
-			href={primaryLink}
+			href={primaryLink || 'https://github.com/sftwrdotdev/Markpad/releases/latest'}
 			class="inline-flex items-center gap-2 rounded-l-md bg-vscode-accent px-6 py-3 font-semibold text-white transition-all hover:bg-blue-600 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-vscode-bg">
 			{#if os === 'windows'}
 				<img src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/windows-white-icon.png" alt="Windows" class="h-4 w-4" />

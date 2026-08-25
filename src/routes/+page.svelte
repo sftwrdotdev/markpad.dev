@@ -1,5 +1,5 @@
 <script lang="ts">
-	import 'github-markdown-css/github-markdown.css';
+	import 'github-markdown-css/github-markdown-dark.css';
 	import { FileText, Sigma, Terminal, AppWindow, Keyboard, Columns, Files, Network, Cpu } from 'lucide-svelte';
 	import { fly } from 'svelte/transition';
 	import { onMount } from 'svelte';
@@ -8,14 +8,10 @@
 	import Navbar from '$lib/components/Navbar.svelte';
 	import FeatureCard from '$lib/components/FeatureCard.svelte';
 	import VersionItem from '$lib/components/VersionItem.svelte';
+	import { parseAssets, type ReleaseAsset, type ReleaseAssets } from '$lib/releases';
 	import DownloadDropdown from '$lib/components/DownloadDropdown.svelte';
 	import Carousel from '$lib/components/Carousel.svelte';
 	import ImageComparison from '$lib/components/ImageComparison.svelte';
-
-	interface ReleaseAsset {
-		name: string;
-		browser_download_url: string;
-	}
 
 	interface GHRelease {
 		tag_name: string;
@@ -32,20 +28,7 @@
 
 	interface LatestRelease {
 		version: string;
-		assets: {
-			windows: {
-				installer: { x64: string; arm64: string };
-				portable: { x64: string; arm64: string };
-			};
-			linux: {
-				appimage: string;
-				deb: string;
-				rpm: string;
-			};
-			mac: {
-				universal: string;
-			};
-		};
+		assets: ReleaseAssets;
 	}
 
 	let changelog = $state<ChangelogItem[]>([]);
@@ -53,7 +36,7 @@
 
 	onMount(async () => {
 		try {
-			const res = await fetch('https://api.github.com/repos/alecdotdev/Markpad/releases');
+			const res = await fetch('https://api.github.com/repos/sftwrdotdev/Markpad/releases');
 
 			if (!res.ok) {
 				console.error(`GitHub API Error: ${res.statusText}`);
@@ -74,56 +57,10 @@
 				}),
 			);
 
-			// Parse assets for the latest release
-			const assets = {
-				windows: {
-					installer: {
-						x64: '',
-						arm64: '',
-					},
-					portable: {
-						x64: '',
-						arm64: '',
-					},
-				},
-				linux: {
-					appimage: '',
-					deb: '',
-					rpm: '',
-				},
-				mac: {
-					universal: '',
-				},
-			};
-
 			if (latest) {
-				for (const asset of latest.assets) {
-					const name = asset.name.toLowerCase();
-					const url = asset.browser_download_url;
-
-					if (name.endsWith('.exe')) {
-						if (name.includes('installer')) {
-							if (name.includes('arm64')) assets.windows.installer.arm64 = url;
-							else if (name.includes('x64')) assets.windows.installer.x64 = url;
-						} else {
-							// Portable
-							if (name.includes('arm64')) assets.windows.portable.arm64 = url;
-							else if (name.includes('x64')) assets.windows.portable.x64 = url;
-						}
-					} else if (name.endsWith('.appimage')) {
-						assets.linux.appimage = url;
-					} else if (name.endsWith('.deb')) {
-						assets.linux.deb = url;
-					} else if (name.endsWith('.rpm')) {
-						assets.linux.rpm = url;
-					} else if (name.endsWith('.dmg')) {
-						assets.mac.universal = url;
-					}
-				}
-
 				latestRelease = {
-					version: latest?.tag_name || 'unknown',
-					assets,
+					version: latest.tag_name || 'unknown',
+					assets: parseAssets(latest.assets),
 				};
 			}
 		} catch (e) {
@@ -193,7 +130,7 @@
 			<div class="flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
 				<DownloadDropdown release={latestRelease} />
 				<a
-					href="https://github.com/alecdotdev/Markpad"
+					href="https://github.com/sftwrdotdev/Markpad"
 					target="_blank"
 					rel="noreferrer"
 					class="inline-flex items-center justify-center rounded-md border border-[#333] px-6 py-3 font-semibold text-vscode-text transition-all hover:border-vscode-text hover:bg-[#252526] hover:text-white">
