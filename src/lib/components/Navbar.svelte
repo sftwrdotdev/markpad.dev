@@ -7,7 +7,7 @@
 
 	onMount(async () => {
 		try {
-			const res = await fetch('https://api.github.com/repos/alecdotdev/Markpad');
+			const res = await fetch('https://api.github.com/repos/sftwrdotdev/Markpad');
 			if (res.ok) {
 				const data = await res.json();
 				stars = data.stargazers_count;
@@ -27,7 +27,7 @@
 		<div class="flex items-center gap-4">
 			<DonationDropdown />
 			<a
-				href="https://github.com/alecdotdev/Markpad"
+				href="https://github.com/sftwrdotdev/Markpad"
 				target="_blank"
 				rel="noreferrer"
 				class="flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium text-vscode-text transition-colors hover:bg-vscode-header hover:text-white">
