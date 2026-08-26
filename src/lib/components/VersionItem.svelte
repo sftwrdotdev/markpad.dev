@@ -55,4 +55,22 @@
 		margin-bottom: 0.5rem !important;
 		padding-bottom: 0 !important;
 	}
+	:global(.format-changelog.markdown-body table) {
+		background-color: transparent !important;
+	}
+	:global(.format-changelog.markdown-body table tr) {
+		background-color: transparent !important;
+		border-color: #333 !important;
+	}
+	:global(.format-changelog.markdown-body table th),
+	:global(.format-changelog.markdown-body table td) {
+		background-color: transparent !important;
+		border-color: #333 !important;
+	}
+	:global(.format-changelog.markdown-body img) {
+		max-width: 100% !important;
+		height: auto !important;
+		border-radius: 0.5rem !important;
+		border: 1px solid rgba(255, 255, 255, 0.1) !important;
+	}
 </style>
