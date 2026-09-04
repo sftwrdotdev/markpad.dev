@@ -17,6 +17,9 @@
 		Cpu,
 		ShieldCheck,
 		Languages,
+		Github,
+		ChevronDown,
+		ChevronUp,
 	} from "lucide-svelte";
 	import { fly } from "svelte/transition";
 	import { onMount } from "svelte";
@@ -33,6 +36,7 @@
 	import DownloadDropdown from "$lib/components/DownloadDropdown.svelte";
 	import Carousel from "$lib/components/Carousel.svelte";
 	import ImageComparison from "$lib/components/ImageComparison.svelte";
+	import Footer from "$lib/components/Footer.svelte";
 
 	interface GHRelease {
 		tag_name: string;
@@ -54,6 +58,7 @@
 
 	let changelog = $state<ChangelogItem[]>([]);
 	let latestRelease = $state<LatestRelease | null>(null);
+	let showAllUpdates = $state(false);
 
 	onMount(async () => {
 		try {
@@ -250,11 +255,24 @@
 					href="https://github.com/sftwrdotdev/Markpad"
 					target="_blank"
 					rel="noreferrer"
-					class="inline-flex items-center justify-center rounded-md border border-[#333] px-6 py-3 font-semibold text-vscode-text transition-all hover:border-vscode-text hover:bg-[#252526] hover:text-white"
+					class="inline-flex items-center justify-center gap-2 rounded-md border border-[#333] px-6 py-3 font-semibold text-vscode-text transition-all hover:border-vscode-text hover:bg-[#252526] hover:text-white"
 				>
-					View on GitHub
+					<Github size={20} />
+					<span>View on GitHub</span>
 				</a>
 			</div>
+
+			<p
+				class="mt-4 flex items-center justify-center gap-1.5 text-xs text-gray-400"
+			>
+				<span>
+					Releases are verified under our <a
+						href="/code-signing-policy"
+						class="text-vscode-accent underline hover:text-blue-300 font-medium"
+						>Code signing policy</a
+					>.
+				</span>
+			</p>
 
 			<div
 				class="relative mt-16 flex w-full max-w-6xl justify-center px-4"
@@ -330,94 +348,132 @@
 					</div>
 				{/each}
 			</div>
+		</section>
 
-			<!-- Demo Section -->
-			<section class="mt-24 flex flex-col items-center">
-				<h2 class="mb-12 text-3xl font-bold text-white">
-					See it in Action
-				</h2>
+		<!-- Demo & Tech Stack Section -->
+		<section class="mt-24 flex flex-col items-center">
+			<h2 class="mb-12 text-3xl font-bold text-white">
+				See it in Action
+			</h2>
+			<div
+				class="relative overflow-hidden rounded-xl border border-white/10 shadow-2xl"
+			>
 				<div
-					class="relative overflow-hidden rounded-xl border border-white/10 shadow-2xl"
-				>
-					<div
-						class="absolute inset-0 z-10 bg-linear-to-t from-[#1e1e1e] via-transparent to-transparent opacity-20"
-					></div>
-					<img
-						src="/demo.gif"
-						alt="Markpad Demo"
-						class="w-full max-w-5xl"
-					/>
-				</div>
+					class="absolute inset-0 z-10 bg-linear-to-t from-[#1e1e1e] via-transparent to-transparent opacity-20"
+				></div>
+				<img
+					src="/demo.gif"
+					alt="Markpad Demo"
+					class="w-full max-w-5xl"
+				/>
+			</div>
+
+			<div class="mt-10 flex flex-col items-center gap-6">
 				<button
 					onclick={() =>
 						window.scrollTo({ top: 0, behavior: "smooth" })}
-					class="mt-12 inline-flex items-center justify-center rounded-md bg-vscode-accent px-8 py-4 text-lg font-bold text-white shadow-lg transition-all hover:scale-101 hover:bg-vscode-accent/90 active:scale-95"
+					class="inline-flex items-center justify-center rounded-md bg-vscode-accent px-8 py-3.5 text-base font-bold text-white shadow-lg transition-all hover:scale-101 hover:bg-vscode-accent/90 active:scale-95"
 				>
 					Try Markpad Now
 				</button>
-			</section>
-			<!-- Tech Stack -->
-			<section class="mt-24">
-				<h2 class="mb-0 text-center text-3xl font-bold text-white">
-					Built with
-				</h2>
-				<div
-					class="mt-0 flex flex-wrap justify-center gap-4 border-0 border-[#252526] py-10 opacity-80 transition-all"
-				>
-					<div
-						class="flex items-center gap-2 rounded-full border border-[#333] bg-[#252526] px-4 py-1.5 text-sm font-medium text-gray-300"
+
+				<div class="flex flex-col items-center gap-3">
+					<span
+						class="text-xs font-semibold tracking-wider text-gray-400 uppercase"
 					>
-						<img
-							src="https://icons.veryicon.com/png/o/business/vscode-program-item-icon/rust-1.png"
-							alt="Tauri"
-							class="h-5 w-5"
-						/>
-						Rust
-					</div>
+						Built with
+					</span>
 					<div
-						class="flex items-center gap-2 rounded-full border border-[#333] bg-[#252526] px-4 py-1.5 text-sm font-medium text-gray-300"
+						class="flex flex-wrap items-center justify-center gap-3"
 					>
-						<img
-							src="https://user-images.githubusercontent.com/37125/191574240-d2196844-81b3-4173-8397-5a43077d38d0.png"
-							alt="Tauri"
-							class="h-5 w-5"
-						/>
-						Tauri
-					</div>
-					<div
-						class="flex items-center gap-2 rounded-full border border-[#333] bg-[#252526] px-4 py-1.5 text-sm font-medium text-gray-300"
-					>
-						<img
-							src="https://svelte.dev/svelte-logo.svg"
-							alt="SvelteKit"
-							class="h-5 w-5"
-						/> SvelteKit
-					</div>
-					<div
-						class="flex items-center gap-2 rounded-full border border-[#333] bg-[#252526] px-4 py-1.5 text-sm font-medium text-gray-300"
-					>
-						<span class="font-bold text-[#3178C6]">TS</span> TypeScript
+						<div
+							class="flex items-center gap-2 rounded-full border border-[#333] bg-[#252526] px-3.5 py-1.5 text-xs font-medium text-gray-300 transition-colors hover:border-gray-500"
+						>
+							<img
+								src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Rust_programming_language_black_logo.svg"
+								alt="Rust"
+								class="h-4 w-4 invert opacity-80"
+							/>
+							Rust
+						</div>
+						<div
+							class="flex items-center gap-2 rounded-full border border-[#333] bg-[#252526] px-3.5 py-1.5 text-xs font-medium text-gray-300 transition-colors hover:border-gray-500"
+						>
+							<img
+								src="https://user-images.githubusercontent.com/37125/191574240-d2196844-81b3-4173-8397-5a43077d38d0.png"
+								alt="Tauri"
+								class="h-4 w-4"
+							/>
+							Tauri
+						</div>
+						<div
+							class="flex items-center gap-2 rounded-full border border-[#333] bg-[#252526] px-3.5 py-1.5 text-xs font-medium text-gray-300 transition-colors hover:border-gray-500"
+						>
+							<img
+								src="https://svelte.dev/svelte-logo.svg"
+								alt="SvelteKit"
+								class="h-4 w-4"
+							/>
+							SvelteKit
+						</div>
+						<div
+							class="flex items-center gap-2 rounded-full border border-[#333] bg-[#252526] px-3.5 py-1.5 text-xs font-medium text-gray-300 transition-colors hover:border-gray-500"
+						>
+							<span class="font-bold text-[#3178C6] text-xs"
+								>TS</span
+							>
+							TypeScript
+						</div>
 					</div>
 				</div>
-			</section>
+			</div>
 		</section>
 
 		<!-- Changelog -->
 		<section class="mt-24 max-w-2xl mx-auto">
-			<h2 class="mb-12 text-center text-3xl font-bold text-white">
+			<h2 class="mb-4 text-center text-3xl font-bold text-white">
 				Latest Updates
 			</h2>
-			<div class="ml-4 space-y-0">
-				{#each changelog as release}
-					<VersionItem {...release} />
-				{/each}
-			</div>
+			<p class="mb-12 text-center text-xs text-gray-400">
+				Official release packages are verified under our <a
+					href="/code-signing-policy"
+					class="text-vscode-accent underline hover:text-blue-300 font-medium"
+					>Code signing policy</a
+				>.
+			</p>
+			{#if changelog.length > 0}
+				<div class="ml-4 space-y-0">
+					<VersionItem {...changelog[0]} />
+					{#if showAllUpdates}
+						{#each changelog.slice(1) as release}
+							<VersionItem {...release} />
+						{/each}
+					{/if}
+				</div>
+
+				{#if changelog.length > 1}
+					<div class="mt-6 flex justify-center">
+						<button
+							type="button"
+							onclick={() => (showAllUpdates = !showAllUpdates)}
+							class="inline-flex items-center gap-2 rounded-md border border-[#333] bg-[#252526] px-4 py-2 text-sm font-medium text-gray-300 transition-colors hover:border-vscode-text hover:text-white"
+						>
+							{#if showAllUpdates}
+								<ChevronUp size={16} />
+								<span>Hide older versions</span>
+							{:else}
+								<ChevronDown size={16} />
+								<span
+									>Show older versions ({changelog.length -
+										1})</span
+								>
+							{/if}
+						</button>
+					</div>
+				{/if}
+			{/if}
 		</section>
 	</main>
 
-	<footer
-		class="mt-20 border-t border-[#252526] bg-[#252526] py-12 text-center text-gray-500"
-	>
-		<p><a href="https://github.com/alecdotdev">&copy; alecdotdev</a></p>
-	</footer>
+	<Footer />
 </div>
