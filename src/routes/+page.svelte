@@ -233,7 +233,6 @@
 				src="/icon.png"
 				alt="Markpad Logo"
 				class="mb-8 w-32 h-32"
-				style="filter:invert(0.9)"
 			/>
 			<h1
 				class="mb-4 text-5xl font-extrabold tracking-tight text-white sm:text-7xl"
