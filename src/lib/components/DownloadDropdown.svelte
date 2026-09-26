@@ -76,7 +76,7 @@
 		<!-- Primary Button -->
 		<a
 			href={primaryLink || 'https://github.com/sftwrdotdev/Markpad/releases/latest'}
-			class="inline-flex items-center gap-2 rounded-l-md bg-vscode-accent px-6 py-3 font-semibold text-white transition-all hover:bg-blue-600 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-vscode-bg">
+			class="inline-flex items-center gap-2 rounded-l-md bg-vscode-accent px-6 py-3 font-semibold text-white transition-all hover:bg-[#0879ca] focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-vscode-bg">
 			{#if os === 'windows'}
 				<img src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/windows-white-icon.png" alt="Windows" class="h-4 w-4" />
 			{:else if os === 'mac'}
@@ -91,7 +91,7 @@
 		<button
 			bind:this={buttonRef}
 			type="button"
-			class="inline-flex items-center rounded-r-md bg-vscode-accent px-3 py-3 text-white transition-all hover:bg-blue-600 focus:z-10 focus:outline-none border-l border-blue-600"
+			class="inline-flex items-center rounded-r-md bg-vscode-accent px-3 py-3 text-white transition-all hover:bg-[#0879ca] focus:z-10 focus:outline-none border-l border-[#075f9d]"
 			onclick={toggleDropdown}
 			aria-expanded={isOpen}
 			aria-haspopup="true">
