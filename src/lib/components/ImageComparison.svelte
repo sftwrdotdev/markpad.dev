@@ -49,7 +49,7 @@
 	</div>
 
 	<!-- Gradient Overlay on top of everything -->
-	<div class="col-start-1 row-start-1 absolute inset-0 z-20 pointer-events-none bg-gradient-to-b from-transparent via-transparent to-[#1E1E1E]"></div>
+	<div class="screenshot-fade col-start-1 row-start-1 absolute inset-0 z-20 pointer-events-none"></div>
 
 	<!-- Slider Handle -->
 	<div class="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize z-30 pointer-events-none shadow-[0_0_15px_rgba(0,0,0,0.5)]" style="left: {sliderPosition}%">

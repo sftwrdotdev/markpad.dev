@@ -229,11 +229,7 @@
 	<main class="mx-auto max-w-5xl px-4 pb-20 pt-16 sm:px-6 lg:px-8">
 		<!-- Hero Section -->
 		<section class="flex flex-col items-center text-center">
-			<img
-				src="/icon.png"
-				alt="Markpad Logo"
-				class="mb-8 w-32 h-32"
-			/>
+			<img src="/icon.png" alt="Markpad Logo" class="hero-icon mb-8 h-32 w-32" />
 			<h1
 				class="mb-4 text-5xl font-extrabold tracking-tight text-white sm:text-7xl"
 			>
@@ -264,7 +260,7 @@
 					class="absolute -left-4 top-12 z-0 hidden w-2/3 transition-all duration-1000 sm:block md:-left-64 md:w-7/12"
 				>
 					<div
-						class="absolute inset-0 z-20 rounded-xl pointer-events-none bg-gradient-to-b from-transparent via-transparent to-[#1E1E1E]"
+						class="screenshot-fade absolute inset-0 z-20 rounded-xl pointer-events-none"
 					></div>
 					<img
 						src="/mac.png"
@@ -279,7 +275,7 @@
 					class="absolute -right-4 top-12 z-0 hidden w-2/3 transition-all duration-1000 sm:block md:-right-64 md:w-7/12"
 				>
 					<div
-						class="absolute inset-0 z-20 rounded-xl pointer-events-none bg-gradient-to-b from-transparent via-transparent to-[#1E1E1E]"
+						class="screenshot-fade absolute inset-0 z-20 rounded-xl pointer-events-none"
 					></div>
 					<img
 						src="/editor.png"
@@ -293,9 +289,6 @@
 					in:fly={{ y: 50, duration: 1000 }}
 					class="relative z-10 w-full max-w-4xl shadow-2xl md:w-3/4"
 				>
-					<div
-						class="absolute inset-0 z-20 rounded-xl pointer-events-none bg-gradient-to-b from-transparent via-transparent to-[#1E1E1E]"
-					></div>
 					<ImageComparison
 						leftImage="/splitleft.png"
 						rightImage="/splitright.png"
@@ -315,7 +308,7 @@
 					<div>
 						<div class="mb-4 flex items-center gap-3">
 							<span
-								class="text-xs font-bold tracking-widest text-vscode-accent uppercase"
+								class="text-xs font-bold tracking-widest text-vscode-accent-text uppercase"
 							>
 								{group.category}
 							</span>
@@ -420,3 +413,11 @@
 		<p><a href="https://github.com/alecdotdev">&copy; alecdotdev</a></p>
 	</footer>
 </div>
+
+<style>
+	.hero-icon {
+		filter: drop-shadow(0 -3px 6px rgba(232, 238, 250, 0.05))
+			drop-shadow(0 8px 11px rgba(226, 236, 250, 0.21))
+			drop-shadow(0 14px 17px rgba(0, 0, 0, 0.36));
+	}
+</style>
