@@ -236,7 +236,7 @@
 				Markpad
 			</h1>
 			<p class="mb-16 max-w-2xl text-xl text-gray-400 sm:text-2xl">
-				The Notepad equivalent for Markdown.
+				Light as Notepad, elegant as Markdown.
 			</p>
 
 			<div class="flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
