@@ -31,6 +31,7 @@
 		type ReleaseAssets,
 	} from "$lib/releases";
 	import DownloadDropdown from "$lib/components/DownloadDropdown.svelte";
+	import InstallCommand from "$lib/components/InstallCommand.svelte";
 	import Carousel from "$lib/components/Carousel.svelte";
 	import ImageComparison from "$lib/components/ImageComparison.svelte";
 
@@ -250,6 +251,8 @@
 					View on GitHub
 				</a>
 			</div>
+
+			<InstallCommand />
 
 			<div
 				class="relative mt-16 flex w-full max-w-6xl justify-center px-4"
