@@ -1,10 +1,43 @@
 <script lang="ts">
-	export let version: string;
-	export let bodyHTML: string;
-	export let date: string = '';
+	import { tick } from "svelte";
+
+	interface Props {
+		version: string;
+		date?: string;
+		previewHTML: string;
+		fullHTML: string;
+		truncated: boolean;
+	}
+
+	let { version, date = "", previewHTML, fullHTML, truncated }: Props = $props();
+
+	// notes with no download section to cut at are clamped by height instead
+	const CLAMP_PX = 320;
+	const CLAMP_THRESHOLD_PX = 440;
+
+	const uid = $props.id();
+	const notesId = `release-notes-${uid}`;
+
+	let root: HTMLElement;
+	let expanded = $state(false);
+	let contentHeight = $state(0);
+
+	const clampable = $derived(!truncated && contentHeight > CLAMP_THRESHOLD_PX);
+	const collapsible = $derived(truncated || clampable);
+	const clamped = $derived(clampable && !expanded);
+	const html = $derived(truncated && !expanded ? previewHTML : fullHTML);
+
+	async function toggle() {
+		expanded = !expanded;
+		if (expanded) return;
+		await tick();
+		if (root.getBoundingClientRect().top < 0) {
+			root.scrollIntoView({ block: "start", behavior: "smooth" });
+		}
+	}
 </script>
 
-<div class="relative border-l border-[#333] pl-6 pb-8 last:pb-0">
+<div bind:this={root} class="relative scroll-mt-20 border-l border-[#333] pl-6 pb-8 last:pb-0">
 	<div class="absolute -left-[5px] top-0 h-2.5 w-2.5 rounded-full bg-vscode-accent ring-4 ring-vscode-bg"></div>
 	<div class="mb-4 flex items-center gap-3">
 		<span class="text-sm font-bold text-vscode-accent">{version}</span>
@@ -12,9 +45,30 @@
 			<span class="text-xs text-gray-500">{date}</span>
 		{/if}
 	</div>
-	<div class="markdown-body format-changelog">
-		{@html bodyHTML}
+	<div
+		id={notesId}
+		class="relative"
+		class:overflow-hidden={clamped}
+		style:max-height={clamped ? `${CLAMP_PX}px` : null}
+	>
+		<div bind:offsetHeight={contentHeight} class="markdown-body format-changelog">
+			{@html html}
+		</div>
+		{#if clamped}
+			<div class="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-vscode-bg to-transparent"></div>
+		{/if}
 	</div>
+	{#if collapsible}
+		<button
+			type="button"
+			aria-expanded={expanded}
+			aria-controls={notesId}
+			onclick={toggle}
+			class="mt-3 text-sm font-medium text-vscode-accent-text transition-colors hover:text-white"
+		>
+			{expanded ? "Show less" : "Show more"}
+		</button>
+	{/if}
 </div>
 
 <style>

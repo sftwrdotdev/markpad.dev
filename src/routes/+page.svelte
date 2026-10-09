@@ -20,7 +20,6 @@
 	} from "lucide-svelte";
 	import { fly } from "svelte/transition";
 	import { onMount } from "svelte";
-	import { marked } from "marked";
 
 	import Navbar from "$lib/components/Navbar.svelte";
 	import FeatureCard from "$lib/components/FeatureCard.svelte";
@@ -30,6 +29,7 @@
 		type ReleaseAsset,
 		type ReleaseAssets,
 	} from "$lib/releases";
+	import { renderReleaseNotes, type ReleaseNotes } from "$lib/changelog";
 	import DownloadDropdown from "$lib/components/DownloadDropdown.svelte";
 	import InstallCommand from "$lib/components/InstallCommand.svelte";
 	import Carousel from "$lib/components/Carousel.svelte";
@@ -37,15 +37,14 @@
 
 	interface GHRelease {
 		tag_name: string;
-		published_at: string;
-		body: string;
+		published_at: string | null;
+		body: string | null;
 		assets: ReleaseAsset[];
 	}
 
-	interface ChangelogItem {
+	interface ChangelogItem extends ReleaseNotes {
 		version: string;
 		date: string;
-		bodyHTML: string;
 	}
 
 	interface LatestRelease {
@@ -53,35 +52,79 @@
 		assets: ReleaseAssets;
 	}
 
+	const RELEASES_URL =
+		"https://api.github.com/repos/sftwrdotdev/Markpad/releases";
+	const CHANGELOG_STEP = 3;
+
 	let changelog = $state<ChangelogItem[]>([]);
 	let latestRelease = $state<LatestRelease | null>(null);
+	let visibleCount = $state(CHANGELOG_STEP);
+	let nextPageUrl = $state<string | null>(null);
+	let loadingMore = $state(false);
+
+	const visibleChangelog = $derived(changelog.slice(0, visibleCount));
+	const canShowMore = $derived(
+		visibleCount < changelog.length || nextPageUrl !== null,
+	);
+
+	function toChangelogItem(release: GHRelease): ChangelogItem {
+		return {
+			version: release.tag_name,
+			date: release.published_at
+				? new Date(release.published_at).toLocaleDateString()
+				: "",
+			...renderReleaseNotes(release.body),
+		};
+	}
+
+	async function fetchReleases(url: string) {
+		const res = await fetch(url);
+		if (!res.ok) {
+			throw new Error(`GitHub API Error: ${res.status} ${res.statusText}`);
+		}
+		const releases: GHRelease[] = await res.json();
+		const next =
+			res.headers.get("link")?.match(/<([^>]+)>;\s*rel="next"/)?.[1] ??
+			null;
+		return { releases, next };
+	}
+
+	// a release published between page fetches shifts the pages, so skip repeats
+	function appendReleases(releases: GHRelease[]) {
+		const seen = new Set(changelog.map((item) => item.version));
+		const fresh = releases.filter((r) => !seen.has(r.tag_name));
+		changelog = [...changelog, ...fresh.map(toChangelogItem)];
+	}
+
+	async function showMoreUpdates() {
+		if (loadingMore) return;
+		const target = visibleCount + CHANGELOG_STEP;
+
+		if (changelog.length < target && nextPageUrl) {
+			loadingMore = true;
+			try {
+				while (changelog.length < target && nextPageUrl) {
+					const { releases, next } = await fetchReleases(nextPageUrl);
+					appendReleases(releases);
+					nextPageUrl = next;
+				}
+			} catch (e) {
+				console.error("Failed to fetch more releases:", e);
+			} finally {
+				loadingMore = false;
+			}
+		}
+
+		visibleCount = Math.min(target, changelog.length);
+	}
 
 	onMount(async () => {
 		try {
-			const res = await fetch(
-				"https://api.github.com/repos/sftwrdotdev/Markpad/releases",
-			);
-
-			if (!res.ok) {
-				console.error(`GitHub API Error: ${res.statusText}`);
-				return;
-			}
-
-			const releases: GHRelease[] = await res.json();
+			const { releases, next } = await fetchReleases(RELEASES_URL);
 			const latest = releases[0];
 
-			// Parse changelog from releases
-			changelog = await Promise.all(
-				releases.map(async (release) => {
-					return {
-						version: release.tag_name,
-						date: new Date(
-							release.published_at,
-						).toLocaleDateString(),
-						bodyHTML: await marked.parse(release.body),
-					};
-				}),
-			);
+			appendReleases(releases);
+			nextPageUrl = next;
 
 			if (latest) {
 				latestRelease = {
@@ -403,10 +446,23 @@
 				Latest Updates
 			</h2>
 			<div class="ml-4 space-y-0">
-				{#each changelog as release}
+				{#each visibleChangelog as release (release.version)}
 					<VersionItem {...release} />
 				{/each}
 			</div>
+			{#if canShowMore}
+				<div class="mt-10 flex justify-center">
+					<button
+						type="button"
+						onclick={showMoreUpdates}
+						disabled={loadingMore}
+						aria-busy={loadingMore}
+						class="inline-flex items-center justify-center rounded-md border border-[#333] px-5 py-2 text-sm font-semibold text-vscode-text transition-all hover:border-vscode-text hover:bg-[#252526] hover:text-white disabled:pointer-events-none disabled:opacity-60"
+					>
+						{loadingMore ? "Loading…" : "Show more updates"}
+					</button>
+				</div>
+			{/if}
 		</section>
 	</main>
 
