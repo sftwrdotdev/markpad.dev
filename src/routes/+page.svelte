@@ -22,6 +22,7 @@
 	import { onMount } from "svelte";
 
 	import Navbar from "$lib/components/Navbar.svelte";
+	import Footer from "$lib/components/Footer.svelte";
 	import FeatureCard from "$lib/components/FeatureCard.svelte";
 	import VersionItem from "$lib/components/VersionItem.svelte";
 	import {
@@ -466,11 +467,7 @@
 		</section>
 	</main>
 
-	<footer
-		class="mt-20 border-t border-[#252526] bg-[#252526] py-12 text-center text-gray-500"
-	>
-		<p><a href="https://github.com/alecdotdev">&copy; alecdotdev</a></p>
-	</footer>
+	<Footer />
 </div>
 
 <style>
