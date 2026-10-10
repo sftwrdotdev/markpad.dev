@@ -20,9 +20,9 @@
 
 <nav class="sticky top-0 z-50 w-full border-b border-vscode-header bg-vscode-bg/80 backdrop-blur-md">
 	<div class="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
-		<div class="flex items-center gap-2">
+		<a href="/" class="flex items-center gap-2">
 			<span class="text-xl font-bold tracking-tight text-white">Markpad</span>
-		</div>
+		</a>
 
 		<div class="flex items-center gap-4">
 			<DonationDropdown />
