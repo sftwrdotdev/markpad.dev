@@ -236,9 +236,9 @@
 					icon: Monitor,
 				},
 				{
-					title: "~10MB Memory",
+					title: "Lightweight",
 					description:
-						"Ultra-efficient resource usage and near-instant startup times.",
+						"Efficient resource usage and near-instant startup times.",
 					icon: Cpu,
 				},
 				{
